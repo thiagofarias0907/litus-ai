@@ -4,4 +4,8 @@ version = "0.1.0"
 description = "A ticketing service using FastAPI"
 requires-python = ">=3.10"
 
-dependencies = ["fastapi[standard]"]
+dependencies = [
+    "fastapi[standard]",
+    "pydantic>=2.9.2",
+    "pymongo[srv]>=4.10.1",
+]

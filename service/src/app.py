@@ -1,7 +1,57 @@
-from fastapi import FastAPI
+import uvicorn
+from fastapi import FastAPI, status, HTTPException
+from typing import List
+from src.models import ToDo
+from src.database import Database
 
-app = FastAPI()
+description = """
+Simple backend api for CRUD operations for ToDo project
+
+## Operations
+You can list all tasks in the todo list, but also insert and remove a single task.
+
+* list: returns all tasks in todo list
+* insert: adds a new document to the database collection
+* delete: removes a single document from the collection
+
+## Database
+MongoDB
+## Database name
+* ticketing
+## Collection
+* tickets
+
+"""
+
+app = FastAPI(
+    title='ToDo Api',
+    description=description
+)
+
+database = Database()
 
 
-# TODO: implement the needed endpoints, interacting as needed with the database
-# NOTE: this file imports FastAPI, but you can use Flask if you prefer
+@app.get("/todos", response_model=List[ToDo])
+async def list_all():
+    return database.list_all()
+
+
+@app.delete("/todos/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete(id: str):
+    try:
+        database.delete(id)
+    except:
+        raise HTTPException(status_code=404, detail="This 'todo' was not found")
+
+
+@app.post("/todos/insert", response_model=ToDo, status_code=status.HTTP_201_CREATED)
+async def insert(todo: ToDo) -> ToDo:
+    inserted = database.insert(todo)
+    if inserted is None:
+        raise HTTPException(status_code=404, detail="This 'todo' couldn't be saved")
+
+    return inserted
+
+#
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8080)
