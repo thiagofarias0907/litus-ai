@@ -1,7 +1,7 @@
 import { DeleteTodo } from "./delete-todo"
 
 export async function ToDos() {
-    const response = await fetch('http://localhost:8000/todos', {
+    const response = await fetch(`${process.env.API_HOST}/todos`, {
         next: {
             tags: ['get-todos']
         }

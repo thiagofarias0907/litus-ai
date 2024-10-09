@@ -20,7 +20,7 @@ export function AddTodo(){
 
 
 
-        await fetch('http://localhost:8080/todos/insert', {
+        await fetch(`${process.env.API_HOST}/todos/insert`, {
             method: 'POST',
             body: toDo,
             headers:headers

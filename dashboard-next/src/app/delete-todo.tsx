@@ -5,7 +5,7 @@ export function DeleteTodo({id}){
     async function handleDeleteTodo(input) {
         'use server'
        
-        const response = await fetch(`http://localhost:8000/todos/delete/${input.get('id-value')}`, {
+        const response = await fetch(`${process.env.API_HOST}/todos/delete/${input.get('id-value')}`, {
             method: 'DELETE'
         })
         
