@@ -1,6 +1,9 @@
 import uvicorn
 from fastapi import FastAPI, status, HTTPException
 from typing import List
+
+from starlette.middleware.cors import CORSMiddleware
+
 from src.models import ToDo
 from src.database import Database
 
@@ -23,10 +26,28 @@ MongoDB
 
 """
 
+origins = [
+    "http://localhost",
+    "https://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:8080",
+]
+
 app = FastAPI(
     title='ToDo Api',
     description=description
 )
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 database = Database()
 
@@ -52,6 +73,6 @@ async def insert(todo: ToDo) -> ToDo:
 
     return inserted
 
-#
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="0.0.0.0", port=8080)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080)
